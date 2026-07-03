@@ -3,43 +3,43 @@
 
 <%= form_with model: [:admin, build] do |f| %>
   <%= admin_card do %>
-    <div class="mb-4">
-      <%= f.label :title, class: admin_label_class %>
-      <%= f.text_field :title, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :title, class: "label" %>
+      <%= f.text_field :title, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :description, class: admin_label_class %>
-      <%= f.text_area :description, rows: 3, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :description, class: "label" %>
+      <%= f.text_area :description, rows: 3, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :url, class: admin_label_class %>
-      <%= f.url_field :url, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :url, class: "label" %>
+      <%= f.url_field :url, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :icon_emoji, class: admin_label_class %>
-      <%= f.text_field :icon_emoji, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :icon_emoji, class: "label" %>
+      <%= f.text_field :icon_emoji, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :status, class: admin_label_class %>
-      <%= f.select :status, Build::STATUSES, {}, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :status, class: "label" %>
+      <%= f.select :status, Build.statuses.keys, {}, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :kind, class: admin_label_class %>
-      <%= f.select :kind, Build::KINDS, {}, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :kind, class: "label" %>
+      <%= f.select :kind, Build.kinds.keys, {}, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :position, class: admin_label_class %>
-      <%= f.number_field :position, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :position, class: "label" %>
+      <%= f.number_field :position, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :started_on, class: admin_label_class %>
-      <%= f.date_field :started_on, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :started_on, class: "label" %>
+      <%= f.date_field :started_on, class: "input" %>
     </div>
-    <div class="mb-4 last:mb-0">
-      <%= f.label :finished_on, class: admin_label_class %>
-      <%= f.date_field :finished_on, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :finished_on, class: "label" %>
+      <%= f.date_field :finished_on, class: "input" %>
     </div>
   <% end %>
 
-  <%= f.submit "Save", class: btn_primary_class %>
+  <%= f.submit "Save", class: "btn btn--primary" %>
 <% end %>

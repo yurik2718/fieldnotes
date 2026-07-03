@@ -1,17 +1,16 @@
 <%# locals: (essay:) %>
-<article class="bg-surface border border-border rounded-lg p-6 mb-6 shadow-sm relative cursor-pointer transition hover:-translate-y-0.5 hover:shadow-md">
-  <h2 class="text-xl font-bold mb-2">
-    <%= link_to essay.title, essay_path(essay.slug), class: "text-ink hover:text-accent after:absolute after:inset-0 after:content-['']" %>
-  </h2>
-  <% if essay.excerpt.present? %>
-    <p class="text-muted mb-3"><%= essay.excerpt %></p>
-  <% end %>
-  <div class="flex items-center gap-3 flex-wrap">
-    <time class="text-muted text-sm" datetime="<%= essay.published_at.iso8601 %>">
-      <%= essay.published_at.strftime("%B %-d, %Y") %>
-    </time>
-    <% unless essay.published? %>
-      <%= badge(essay.status) %>
+<article class="card margin-block">
+  <div class="card__body">
+    <h2 class="card__title">
+      <%= link_to essay.title, essay_path(essay) %>
+    </h2>
+    <% if essay.excerpt.present? %>
+      <p class="txt-subtle margin-block-half"><%= essay.excerpt %></p>
     <% end %>
+    <div class="card__meta">
+      <time class="txt-subtle txt-small" datetime="<%= essay.published_at.iso8601 %>">
+        <%= essay.published_at.strftime("%B %-d, %Y") %>
+      </time>
+    </div>
   </div>
 </article>

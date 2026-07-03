@@ -3,50 +3,50 @@
 
 <%= form_with model: [:admin, book] do |f| %>
   <%= admin_card(title: "Book") do %>
-    <div class="mb-4">
-      <%= f.label :isbn, "ISBN", class: admin_label_class %>
-      <%= f.text_field :isbn, placeholder: "e.g. 9780134757599", class: admin_input_class %>
-      <p class="<%= admin_hint_class %>">Enter ISBN — title, author, and cover will be fetched automatically.</p>
+    <div class="field">
+      <%= f.label :isbn, "ISBN", class: "label" %>
+      <%= f.text_field :isbn, placeholder: "e.g. 9780134757599", class: "input" %>
+      <p class="hint">Enter ISBN — title, author, and cover will be fetched automatically.</p>
     </div>
-    <div class="mb-4">
-      <%= f.label :title, class: admin_label_class %>
-      <%= f.text_field :title, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :title, class: "label" %>
+      <%= f.text_field :title, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :author, class: admin_label_class %>
-      <%= f.text_field :author, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :author, class: "label" %>
+      <%= f.text_field :author, class: "input" %>
     </div>
     <% if book.cover_image_url.present? %>
-      <div class="mb-4">
-        <p class="<%= admin_label_class %>">Cover preview</p>
-        <img src="<%= book.cover_image_url %>" alt="Cover" class="max-h-40 rounded mt-1">
+      <div class="field">
+        <p class="label">Cover preview</p>
+        <img src="<%= book.cover_image_url %>" alt="Cover" class="cover-preview">
       </div>
     <% end %>
   <% end %>
 
   <%= admin_card(title: "Your notes") do %>
-    <div class="mb-4">
-      <%= f.label :status, class: admin_label_class %>
-      <%= f.select :status, Book::STATUSES, {}, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :status, class: "label" %>
+      <%= f.select :status, Book.statuses.keys, {}, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :rating, class: admin_label_class %>
-      <%= f.number_field :rating, min: 1, max: 5, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :rating, class: "label" %>
+      <%= f.number_field :rating, min: 1, max: 5, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :year_read, class: admin_label_class %>
-      <%= f.number_field :year_read, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :year_read, class: "label" %>
+      <%= f.number_field :year_read, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :key_idea, "Key idea (one sentence)", class: admin_label_class %>
-      <%= f.text_field :key_idea, placeholder: "The one thing you took away from this book", class: admin_input_class %>
+    <div class="field">
+      <%= f.label :key_idea, "Key idea (one sentence)", class: "label" %>
+      <%= f.text_field :key_idea, placeholder: "The one thing you took away from this book", class: "input" %>
     </div>
-    <div class="mb-0">
-      <%= f.label :review, "Notes & review", class: admin_label_class %>
+    <div class="field">
+      <%= f.label :review, "Notes & review", class: "label" %>
       <%= f.rich_text_area :review %>
-      <p class="<%= admin_hint_class %>">Quotes, thoughts, detailed notes. Supports formatting.</p>
+      <p class="hint">Quotes, thoughts, detailed notes. Supports formatting.</p>
     </div>
   <% end %>
 
-  <%= f.submit "Save", class: btn_primary_class %>
+  <%= f.submit "Save", class: "btn btn--primary" %>
 <% end %>

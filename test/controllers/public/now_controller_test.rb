@@ -8,6 +8,6 @@ class Public::NowControllerTest < ActionDispatch::IntegrationTest
 
   test "show displays previous entries" do
     get now_url
-    assert_select ".previous-entries"
+    assert_select ".history"
   end
 end

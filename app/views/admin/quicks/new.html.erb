@@ -1,31 +1,31 @@
 <% content_for :title, "Quick Post" %>
 
-<div class="max-w-sm mx-auto py-8 px-4">
-  <h1 class="text-2xl font-bold mb-6">Quick Post</h1>
+<div class="center-narrow">
+  <h1 class="txt-large margin-block">Quick Post</h1>
 
-  <%= form_with model: @field_series, url: admin_quick_path, class: "space-y-4" do |f| %>
-    <%= f.file_field :photos, multiple: true, accept: "image/*",
-        capture: "environment",
-        class: "w-full text-sm",
-        data: { controller: "direct-upload", action: "change->direct-upload#preview" } %>
+  <%= form_with model: @field_series, url: admin_quick_path,
+        data: { controller: "upload-preview" } do |f| %>
+    <div class="field">
+      <%= f.file_field :photos, multiple: true, accept: "image/*", capture: "environment",
+          class: "input--file full-width",
+          data: { upload_preview_target: "input", action: "change->upload-preview#preview" } %>
+    </div>
 
-    <div id="photo-previews" class="grid grid-cols-3 gap-2"></div>
+    <div class="preview-grid margin-block-half" data-upload-preview-target="previews"></div>
 
-    <%= f.text_field :title, placeholder: "Title", required: true,
-        class: "w-full rounded-lg border border-border bg-surface px-4 py-3 text-base" %>
+    <div class="field">
+      <%= f.text_field :title, placeholder: "Title", required: true, class: "input" %>
+    </div>
 
-    <div data-controller="geolocation">
-      <%= f.text_field :location, placeholder: "Location (optional)",
-          class: "w-full rounded-lg border border-border bg-surface px-4 py-3 text-base",
+    <div class="field" data-controller="geolocation">
+      <%= f.text_field :location, placeholder: "Location (optional)", class: "input",
           data: { geolocation_target: "field" } %>
 
-      <button type="button" data-action="geolocation#detect"
-          class="text-sm text-accent underline mt-1">
+      <button type="button" data-action="geolocation#detect" class="btn btn--link">
         Use my location
       </button>
     </div>
 
-    <%= f.submit "Save Draft →",
-        class: "w-full bg-accent text-white rounded-lg py-3 text-base font-medium cursor-pointer" %>
+    <%= f.submit "Save Draft →", class: "btn btn--primary" %>
   <% end %>
 </div>

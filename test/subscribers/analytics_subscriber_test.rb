@@ -13,6 +13,15 @@ class AnalyticsSubscriberTest < ActiveSupport::TestCase
     end
   end
 
+  test "stores only the event payload, not the envelope" do
+    Rails.event.notify("essay.viewed", essay_id: 7, path: "/essays/x")
+
+    view = PageView.last.reload
+    assert_equal "essay.viewed", view.event
+    assert_equal 7, view.payload["essay_id"]
+    assert_equal %w[ essay_id path ], view.payload.keys.sort
+  end
+
   test "ignores untracked events" do
     assert_no_difference("PageView.count") do
       Rails.event.notify("some.other.event", foo: "bar")

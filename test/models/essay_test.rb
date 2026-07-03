@@ -50,6 +50,11 @@ class EssayTest < ActiveSupport::TestCase
     assert_not duplicate.valid?
   end
 
+  test "to_param is the slug" do
+    essay = essays(:published_new)
+    assert_equal essay.slug, essay.to_param
+  end
+
   test "slug format allows only lowercase letters, numbers, hyphens" do
     essay = Essay.new(title: "Test", slug: "INVALID SLUG!", status: "draft")
     assert_not essay.valid?
@@ -84,15 +89,15 @@ class EssayTest < ActiveSupport::TestCase
     new_essay = essays(:published_new)
     _draft = essays(:draft)
 
-    result = Essay.published
+    result = Essay.published.ordered
     assert_includes result, new_essay
     assert_includes result, old
     assert_not_includes result, _draft
     assert_equal new_essay, result.first
   end
 
-  test "drafts scope returns only draft essays" do
-    assert Essay.drafts.all? { it.status == "draft" }
+  test "draft scope returns only draft essays" do
+    assert Essay.draft.all? { it.status == "draft" }
   end
 
   test "published scope excludes drafts" do

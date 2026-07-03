@@ -11,7 +11,6 @@ class Admin::BuildsController < Admin::BaseController
 
   def create
     @build = Build.new(build_params)
-    @build.position ||= Build.maximum(:position).to_i + 1
     if @build.save
       redirect_to edit_admin_build_url(@build), notice: "Build created"
     else
@@ -36,13 +35,12 @@ class Admin::BuildsController < Admin::BaseController
   end
 
   private
+    def set_build
+      @build = Build.find_by!(slug: params[:id])
+    end
 
-  def set_build
-    @build = Build.find(params[:id])
-  end
-
-  def build_params
-    params.require(:build).permit(:title, :description, :url, :icon_emoji,
-                                  :status, :kind, :position, :started_on, :finished_on, :cover)
-  end
+    def build_params
+      params.expect(build: [ :title, :description, :url, :icon_emoji,
+                             :status, :kind, :position, :started_on, :finished_on, :cover ])
+    end
 end

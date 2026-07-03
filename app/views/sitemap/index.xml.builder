@@ -2,8 +2,15 @@ xml.instruct! :xml, version: "1.0", encoding: "UTF-8"
 xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do
   # Static pages
   [ root_url, essays_url, builds_url, books_url, field_index_url, now_url,
-    about_url, contact_url, uses_url ].each do |url|
+    about_url, contact_url, uses_url, support_url ].each do |url|
     xml.url { xml.loc url }
+  end
+
+  @books.each do |book|
+    xml.url do
+      xml.loc book_url(book)
+      xml.lastmod book.updated_at.iso8601
+    end
   end
 
   # Essays

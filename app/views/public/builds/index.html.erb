@@ -5,12 +5,12 @@
 
 <%= render "public/builds/profile_hero", profile: @profile %>
 
-<h1 class="text-3xl font-bold tracking-tight mb-8">Builds</h1>
+<h1 class="margin-block-2x">Builds</h1>
 
 <% if @builds.empty? %>
-  <p class="text-muted text-center py-16">No builds yet.</p>
+  <p class="empty-state">No builds yet.</p>
 <% else %>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  <div class="auto-grid">
     <%= render partial: "public/builds/card", collection: @builds, as: :build %>
   </div>
 <% end %>

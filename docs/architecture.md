@@ -12,7 +12,7 @@ Rails omakase — the chef has chosen the ingredients, don't swap them out. When
 
 ## Why SQLite
 
-Not because we couldn't afford Postgres. Because SQLite is the right tool for a personal site. It's faster for reads, simpler to operate, and trivially backed up with `cp`. Litestack provides jobs, cache, and websockets on top of it — no external services needed.
+Not because we couldn't afford Postgres. Because SQLite is the right tool for a personal site. It's faster for reads, simpler to operate, and trivially backed up with `cp`. Solid Queue, Solid Cache, and Solid Cable provide jobs, cache, and websockets on top of it — no external services needed.
 
 ## HTML Over the Wire
 

@@ -1,38 +1,36 @@
 <% content_for :title, "Books" %>
 
 <%= admin_toolbar(title: "Books") do %>
-  <%= link_to "New Book", new_admin_book_path, class: btn_primary_class %>
+  <%= link_to "New Book", new_admin_book_path, class: "btn btn--primary" %>
 <% end %>
 
 <% if @books.any? %>
-  <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-    <table class="w-full border-collapse">
-      <thead>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Status</th>
+        <th>Rating</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
         <tr>
-          <th class="<%= admin_table_th_class %>">Title</th>
-          <th class="<%= admin_table_th_class %>">Author</th>
-          <th class="<%= admin_table_th_class %>">Status</th>
-          <th class="<%= admin_table_th_class %>">Rating</th>
-          <th class="<%= admin_table_th_class %>"></th>
+          <td>
+            <%= link_to book.title, edit_admin_book_path(book), class: "txt-accent txt-medium" %>
+          </td>
+          <td class="txt-subtle"><%= book.author %></td>
+          <td><%= badge(book.status) %></td>
+          <td><%= book.rating ? "★" * book.rating : "—" %></td>
+          <td></td>
         </tr>
-      </thead>
-      <tbody>
-        <% @books.each do |book| %>
-          <tr class="hover:bg-stone-50 transition">
-            <td class="<%= admin_table_td_class %>">
-              <%= link_to book.title, edit_admin_book_path(book), class: "text-accent hover:text-[#D4631E] font-medium" %>
-            </td>
-            <td class="<%= admin_table_td_class %> text-stone-500"><%= book.author %></td>
-            <td class="<%= admin_table_td_class %>"><%= badge(book.status) %></td>
-            <td class="<%= admin_table_td_class %>"><%= book.rating ? "★" * book.rating : "—" %></td>
-            <td class="<%= admin_table_td_class %>"></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
-  <p class="text-center py-12 text-stone-500 text-sm">
-    No books yet. <%= link_to "Add your first one", new_admin_book_path, class: "text-accent" %>
+  <p class="empty-state">
+    No books yet. <%= link_to "Add your first one", new_admin_book_path, class: "txt-accent" %>
   </p>
 <% end %>

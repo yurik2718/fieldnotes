@@ -2,10 +2,10 @@
   <%= meta_tags(title: "Fieldnotes", description: "Writing on software, technology, and building things.") %>
 <% end %>
 
-<h1 class="text-3xl font-bold tracking-tight mb-8">Fieldnotes</h1>
+<h1 class="margin-block-2x">Fieldnotes</h1>
 
 <% if @essays.empty? %>
-  <p class="text-muted text-center py-16">No posts yet.</p>
+  <p class="empty-state">No posts yet.</p>
 <% else %>
   <%= render partial: "public/essays/card", collection: @essays, as: :essay %>
 <% end %>

@@ -3,39 +3,44 @@ require "test_helper"
 class ImageVariantJobTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
-  test "does not raise on nil" do
-    assert_nothing_raised { ImageVariantJob.perform_now(nil) }
+  test "essay cover attach enqueues variant warming for the blob" do
+    assert_enqueued_with(job: ImageVariantJob) { attach_image essays(:draft).cover }
   end
 
-  test "does not raise on non-blob argument" do
-    assert_nothing_raised { ImageVariantJob.perform_now("not-a-blob") }
+  test "field series cover attach enqueues variant warming" do
+    assert_enqueued_with(job: ImageVariantJob) { attach_image field_series(:iceland).cover }
   end
 
-  test "enqueues job after essay cover is attached" do
-    essay = Essay.create!(title: "Test", slug: "test-img-#{SecureRandom.hex(4)}", status: "draft")
-    assert_enqueued_with(job: ImageVariantJob) do
-      essay.cover.attach(
-        io: File.open(test_image_path),
-        filename: "cover.jpg",
-        content_type: "image/jpeg"
-      )
+  test "field item photo attach enqueues watermarking and EXIF extraction" do
+    item = field_items(:photo_one)
+
+    assert_enqueued_with(job: ImageVariantJob, args: [ item, { watermark: true } ]) do
+      assert_enqueued_with(job: ExtractExifJob, args: [ item ]) do
+        attach_image item.photo
+      end
     end
   end
 
-  test "enqueues job after field_item photo is attached" do
-    item = FieldItem.create!(field_series: field_series(:iceland), kind: "photo", position: 99)
-    assert_enqueued_with(job: ImageVariantJob) do
-      item.photo.attach(
-        io: File.open(test_image_path),
-        filename: "photo.jpg",
-        content_type: "image/jpeg"
-      )
+  test "rich text image embed enqueues variant warming for the blob" do
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: File.open(Rails.root.join("test/fixtures/files/test_image.jpg")),
+      filename: "embed.jpg", content_type: "image/jpeg"
+    )
+
+    assert_enqueued_with(job: ImageVariantJob, args: [ blob ]) do
+      essays(:draft).update!(content: ActionText::Content.new("").append_attachables(blob))
+    end
+  end
+
+  test "watermarked photo attach does not re-enqueue the pipeline" do
+    assert_no_enqueued_jobs(only: [ ImageVariantJob, ExtractExifJob ]) do
+      attach_image field_items(:photo_one).watermarked_photo
     end
   end
 
   private
-
-  def test_image_path
-    Rails.root.join("test/fixtures/files/test_image.jpg")
-  end
+    def attach_image(attachment)
+      attachment.attach io: File.open(Rails.root.join("test/fixtures/files/test_image.jpg")),
+                        filename: "test.jpg", content_type: "image/jpeg"
+    end
 end

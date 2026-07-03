@@ -1,9 +1,7 @@
 class Public::BuildsController < Public::BaseController
-  rate_limit to: 60, within: 1.minute
-
   def index
-    @builds  = Build.active.ordered
+    @builds  = Build.not_archived.ordered
     @profile = Profile.instance
-    fresh_when @builds
+    fresh_when etag: [ @builds, @profile ]
   end
 end

@@ -1,30 +1,26 @@
 <%# locals: (series:) %>
-<% cover_photo = if series.cover.attached?
-                   series.cover
-                 else
-                   series.field_items.find { |item| item.photo.attached? }&.photo
-                 end %>
-<article class="bg-surface border border-border rounded-lg overflow-hidden relative cursor-pointer transition hover:-translate-y-0.5 hover:shadow-md">
+<% cover_photo = series.cover_photo %>
+<article class="card">
   <% if cover_photo %>
-    <div class="w-full aspect-video overflow-hidden">
+    <div class="card__media">
       <%= picture_tag(cover_photo, alt: series.title, sizes: "(max-width: 768px) 100vw, 50vw") %>
     </div>
   <% end %>
 
-  <div class="p-5">
-    <h2 class="text-lg font-bold mb-1">
-      <%= link_to series.title, field_path(series.slug), class: "text-ink hover:text-accent after:absolute after:inset-0 after:content-['']" %>
+  <div class="card__body">
+    <h2 class="card__title">
+      <%= link_to series.title, field_path(series) %>
     </h2>
     <% if series.description.present? %>
-      <p class="text-muted text-sm mb-3"><%= series.description %></p>
+      <p class="txt-subtle txt-small margin-block-half"><%= series.description %></p>
     <% end %>
-    <div class="flex items-center gap-3 flex-wrap">
+    <div class="card__meta">
       <%= badge(series.kind) %>
       <% if series.location.present? %>
-        <span class="text-muted text-sm">📍 <%= series.location %></span>
+        <span class="txt-subtle txt-small">📍 <%= series.location %></span>
       <% end %>
       <% if series.taken_on.present? %>
-        <time class="text-muted text-sm" datetime="<%= series.taken_on.iso8601 %>">
+        <time class="txt-subtle txt-small" datetime="<%= series.taken_on.iso8601 %>">
           <%= series.taken_on.strftime("%b %Y") %>
         </time>
       <% end %>

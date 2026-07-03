@@ -41,7 +41,6 @@ gem "thruster", require: false
 gem "image_processing", "~> 2.0"
 gem "lexxy", "~> 0.9.0.beta"
 gem "rubyzip"
-gem "tailwindcss-rails"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -38,13 +38,12 @@ class Admin::FieldController < Admin::BaseController
   end
 
   private
+    def set_series
+      @series = FieldSeries.includes(field_items: :photo_attachment).find_by!(slug: params[:id])
+    end
 
-  def set_series
-    @series = FieldSeries.includes(field_items: :photo_attachment).find(params[:id])
-  end
-
-  def field_series_params
-    params.require(:field_series).permit(:title, :description, :kind,
-                                         :location, :taken_on, :latitude, :longitude, :cover)
-  end
+    def field_series_params
+      params.expect(field_series: [ :title, :description, :kind,
+                                    :location, :taken_on, :latitude, :longitude, :cover ])
+    end
 end

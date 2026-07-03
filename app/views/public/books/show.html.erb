@@ -7,44 +7,46 @@
   ) %>
 <% end %>
 
-<div class="flex gap-10 items-start flex-col sm:flex-row">
-  <div class="flex-shrink-0 w-40">
+<div class="book-hero">
+  <div class="book-hero__cover">
     <% if @book.cover_image_url.present? %>
-      <img src="<%= @book.cover_image_url %>" alt="<%= @book.title %>" class="w-full rounded-lg shadow-md">
+      <img src="<%= @book.cover_image_url %>" alt="<%= @book.title %>">
     <% else %>
-      <%= render "public/books/placeholder", title: @book.title %>
+      <div class="book-cover">
+        <%= render "public/books/placeholder", title: @book.title %>
+      </div>
     <% end %>
   </div>
 
-  <div class="flex-1 min-w-0">
-    <header class="mb-6">
-      <h1 class="text-3xl font-bold mb-1"><%= @book.title %></h1>
-      <p class="text-muted text-lg mb-3"><%= @book.author %></p>
-      <div class="flex items-center gap-3 flex-wrap">
+  <div class="flex-grow min-width">
+    <header class="margin-block">
+      <h1><%= @book.title %></h1>
+      <p class="txt-subtle txt-large margin-block-half"><%= @book.author %></p>
+      <div class="flex align-center gap-half flex-wrap">
         <% if @book.rating %>
-          <span class="text-accent tracking-widest"><%= "★" * @book.rating %></span>
+          <span class="stars"><%= "★" * @book.rating %></span>
         <% end %>
         <%= badge(@book.status) %>
         <% if @book.year_read %>
-          <span class="text-muted text-sm">Read in <%= @book.year_read %></span>
+          <span class="txt-subtle txt-small">Read in <%= @book.year_read %></span>
         <% end %>
       </div>
     </header>
 
     <% if @book.key_idea.present? %>
-      <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Key idea</h2>
-        <p class="text-muted leading-relaxed"><%= @book.key_idea %></p>
+      <section class="margin-block">
+        <h2 class="margin-block-half">Key idea</h2>
+        <p class="txt-subtle"><%= @book.key_idea %></p>
       </section>
     <% end %>
 
     <% if @book.review.present? %>
-      <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Notes & review</h2>
+      <section class="margin-block">
+        <h2 class="margin-block-half">Notes & review</h2>
         <div class="lexxy-content"><%= @book.review %></div>
       </section>
     <% end %>
 
-    <p><%= link_to "← Back to reading list", books_path, class: "text-muted hover:text-accent transition" %></p>
+    <p><%= link_to "← Back to reading list", books_path, class: "txt-subtle" %></p>
   </div>
 </div>

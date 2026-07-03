@@ -1,22 +1,12 @@
 class Public::EssaysController < Public::BaseController
-  rate_limit to: 60, within: 1.minute, only: :index
-
   def index
-    @essays = Essay.published.includes(:cover_attachment)
+    @essays = Essay.published.ordered.includes(:cover_attachment)
     fresh_when @essays
   end
 
   def show
-    @essay = Essay.published.find_by(slug: params[:slug])
-    return head :not_found unless @essay
-
+    @essay = Essay.published.find_by!(slug: params[:slug])
     Rails.event.notify("essay.viewed", essay_id: @essay.id, path: request.path)
-    return unless stale?(@essay)
-
-    respond_to do |format|
-      format.html
-      format.rss
-      format.md
-    end
+    fresh_when @essay
   end
 end

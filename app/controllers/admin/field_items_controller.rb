@@ -5,40 +5,41 @@ class Admin::FieldItemsController < Admin::BaseController
   def create
     @item = @series.field_items.new(field_item_params)
     if @item.save
-      if @item.photo.attached?
-        ImageVariantJob.perform_later(@item, watermark: true)
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to admin_field_url(@series), notice: "Item added" }
       end
-      redirect_to admin_field_url(@series), notice: "Item added"
     else
-      redirect_to admin_field_url(@series), alert: "Failed to add item"
+      redirect_to admin_field_url(@series), alert: @item.errors.full_messages.to_sentence
     end
   end
 
   def update
     if @item.update(field_item_params)
-      ImageVariantJob.perform_later(@item, watermark: true) if field_item_params[:photo].present?
       redirect_to admin_field_url(@series), notice: "Item updated"
     else
-      redirect_to admin_field_url(@series), alert: "Failed to update item"
+      redirect_to admin_field_url(@series), alert: @item.errors.full_messages.to_sentence
     end
   end
 
   def destroy
     @item.destroy
-    redirect_to admin_field_url(@series), notice: "Item deleted"
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to admin_field_url(@series), notice: "Item deleted" }
+    end
   end
 
   private
+    def set_series
+      @series = FieldSeries.find_by!(slug: params[:field_id])
+    end
 
-  def set_series
-    @series = FieldSeries.find(params[:field_id])
-  end
+    def set_item
+      @item = @series.field_items.find(params[:id])
+    end
 
-  def set_item
-    @item = @series.field_items.find(params[:id])
-  end
-
-  def field_item_params
-    params.require(:field_item).permit(:kind, :caption, :position, :youtube_url, :photo)
-  end
+    def field_item_params
+      params.expect(field_item: [ :kind, :caption, :position, :youtube_url, :photo ])
+    end
 end

@@ -23,13 +23,6 @@ class Public::EssaysControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "show.rss returns RSS format" do
-    essay = essays(:published_new)
-    get essay_url(slug: essay.slug, format: :rss)
-    assert_response :success
-    assert_equal "application/rss+xml", response.media_type
-  end
-
   test "show.md returns markdown" do
     essay = essays(:published_new)
     get essay_url(slug: essay.slug, format: :md)

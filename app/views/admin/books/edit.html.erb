@@ -3,10 +3,9 @@
 <%= admin_toolbar(title: "Edit Book") %>
 <%= render "form", book: @book %>
 
-<hr class="border-none border-t border-stone-200 my-8">
-<div class="flex items-center gap-4">
-  <p class="text-xs text-stone-500 m-0">Danger Zone</p>
+<div class="danger-zone">
+  <p class="txt-x-small txt-subtle">Danger Zone</p>
   <%= button_to "Delete Book", admin_book_path(@book), method: :delete,
-        class: btn_danger_class,
+        class: "btn btn--danger",
         form: { data: { turbo_confirm: "Delete «#{@book.title}»?" } } %>
 </div>

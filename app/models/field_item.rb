@@ -1,7 +1,8 @@
 class FieldItem < ApplicationRecord
-  KINDS = %w[photo video].freeze
+  include Positioned
 
   belongs_to :field_series, touch: true
+
   has_one_attached :photo do |attachable|
     attachable.variant :thumb,  resize_to_fill:  [ 400,  300 ], format: :avif, saver: { quality: 75 }
     attachable.variant :medium, resize_to_limit: [ 800,  600 ], format: :avif, saver: { quality: 80 }
@@ -15,15 +16,14 @@ class FieldItem < ApplicationRecord
     attachable.variant :retina, resize_to_limit: [ 2560, 1920 ], format: :avif, saver: { quality: 85 }
   end
 
-  validates :kind,     inclusion: { in: KINDS }
-  validates :position, presence: true
-  validates :youtube_url, presence: true, if: -> { kind == "video" }
+  enum :kind, %w[ photo video ].index_by(&:itself), default: :photo, validate: true
 
-  scope :ordered, -> { order(position: :asc) }
-
-  after_create_commit -> { ExtractExifJob.perform_later(id) }, if: -> { photo.attached? }
+  validates :youtube_url, presence: true, if: :video?
 
   def youtube_video_id
     youtube_url&.match(/(?:v=|youtu\.be\/)([^&?\s]+)/)&.captures&.first
   end
+
+  private
+    def positioning_scope = field_series.field_items
 end

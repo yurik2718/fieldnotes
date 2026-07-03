@@ -228,7 +228,7 @@ Your database is a single SQLite file. Back it up daily:
 
 ```bash
 # Download a backup to your local machine
-kamal app exec 'sqlite3 /rails/db/production.sqlite3 ".backup /tmp/backup.sqlite3"'
+kamal app exec 'sqlite3 /rails/storage/production.sqlite3 ".backup /tmp/backup.sqlite3"'
 kamal app exec 'cat /tmp/backup.sqlite3' > backup-$(date +%Y%m%d).sqlite3
 ```
 

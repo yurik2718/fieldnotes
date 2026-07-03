@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title).present? ? "#{content_for(:title)} — Fieldnotes" : "Fieldnotes" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -14,42 +14,43 @@
     <% end %>
     <%= yield :head %>
 
+    <%= tag.link rel: "alternate", type: "application/rss+xml", title: "Fieldnotes", href: feed_url(format: :rss) %>
     <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "lexxy-content", "lexxy-overrides", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy-content", *all_stylesheets, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-bg text-ink font-sans antialiased flex flex-col min-h-screen">
-    <header class="border-b border-border bg-surface sticky top-0 z-10">
-      <nav class="max-w-[90rem] mx-auto px-6 h-[3.25rem] flex items-center justify-between gap-6">
-        <%= link_to "Fieldnotes", root_path, class: "font-bold text-base tracking-tight text-ink hover:text-accent flex-shrink-0" %>
-        <div class="flex items-center gap-1">
-          <%= link_to "Essays",  essays_path,      class: nav_link_class("essays"),  aria: { current: controller_path.end_with?("essays")  ? "page" : nil } %>
-          <%= link_to "Builds",  builds_path,      class: nav_link_class("builds"),  aria: { current: controller_path.end_with?("builds")  ? "page" : nil } %>
-          <%= link_to "Reading", books_path,       class: nav_link_class("books"),   aria: { current: controller_path.end_with?("books")   ? "page" : nil } %>
-          <%= link_to "Field",   field_index_path, class: nav_link_class("field"),   aria: { current: controller_path.end_with?("field")   ? "page" : nil } %>
-          <%= link_to "Now",     now_path,         class: nav_link_class("now"),     aria: { current: controller_path.end_with?("now")     ? "page" : nil } %>
+  <body>
+    <header class="site-header">
+      <nav class="site-header__nav">
+        <%= link_to "Fieldnotes", root_path, class: "site-header__brand" %>
+        <div class="flex align-center gap-half">
+          <%= nav_link "Essays",  essays_path,      controller: "essays" %>
+          <%= nav_link "Builds",  builds_path,      controller: "builds" %>
+          <%= nav_link "Reading", books_path,       controller: "books" %>
+          <%= nav_link "Field",   field_index_path, controller: "field" %>
+          <%= nav_link "Now",     now_path,         controller: "now" %>
         </div>
       </nav>
     </header>
 
-    <main class="flex-1 mx-auto px-6 py-12 w-full <%= content_for(:main_class).presence || "max-w-content" %>">
+    <main class="<%= content_for(:main_class) %>">
       <%= render "shared/flash" %>
       <%= yield %>
     </main>
 
-    <footer class="border-t border-border">
-      <nav class="max-w-[90rem] mx-auto px-6 py-8 flex gap-6 text-sm">
-        <%= link_to "About",   about_path,                       class: "text-muted hover:text-accent transition" %>
-        <%= link_to "Uses",    uses_path,                        class: "text-muted hover:text-accent transition" %>
-        <%= link_to "Contact", contact_path,                     class: "text-muted hover:text-accent transition" %>
-        <%= link_to "GitHub",  "https://github.com/YurikOnRails", class: "text-muted hover:text-accent transition" %>
-        <%= link_to "RSS",     feed_path(format: :rss),          class: "text-muted hover:text-accent transition" %>
+    <footer class="site-footer">
+      <nav>
+        <%= link_to "About",   about_path %>
+        <%= link_to "Uses",    uses_path %>
+        <%= link_to "Contact", contact_path %>
+        <%= link_to "Support", support_path %>
+        <%= link_to "GitHub",  "https://github.com/YurikOnRails" %>
+        <%= link_to "RSS",     feed_path(format: :rss) %>
       </nav>
     </footer>
   </body>

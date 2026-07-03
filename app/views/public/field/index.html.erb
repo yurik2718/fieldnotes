@@ -3,12 +3,12 @@
   <%= meta_tags(title: "Field", description: "Photo and video expedition series.") %>
 <% end %>
 
-<h1 class="text-3xl font-bold tracking-tight mb-8">Field</h1>
+<h1 class="margin-block-2x">Field</h1>
 
 <% if @series.empty? %>
-  <p class="text-muted text-center py-16">No field series yet.</p>
+  <p class="empty-state">No field series yet.</p>
 <% else %>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  <div class="auto-grid">
     <%= render partial: "public/field/card", collection: @series, as: :series %>
   </div>
 <% end %>

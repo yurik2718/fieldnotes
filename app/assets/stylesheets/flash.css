@@ -1,0 +1,17 @@
+.flash {
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-block-end: 1.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.flash--notice {
+  background: var(--color-green-bg);
+  color: var(--color-green-text);
+}
+
+.flash--alert {
+  background: var(--color-red-bg);
+  color: var(--color-red-text);
+}

@@ -5,13 +5,8 @@ class Admin::QuicksController < Admin::BaseController
 
   def create
     @field_series = FieldSeries.new(quick_params)
-    @field_series.kind = "photo"
-
     if @field_series.save
-      photos_params.each_with_index do |photo, i|
-        item = @field_series.field_items.create!(kind: "photo", position: i + 1)
-        item.photo.attach(photo)
-      end
+      @field_series.append_photos(photos_params)
       redirect_to edit_admin_field_path(@field_series), notice: "Draft created — add details"
     else
       render :new, status: :unprocessable_entity
@@ -19,12 +14,11 @@ class Admin::QuicksController < Admin::BaseController
   end
 
   private
+    def quick_params
+      params.expect(field_series: [ :title, :location ])
+    end
 
-  def quick_params
-    params.require(:field_series).permit(:title, :location)
-  end
-
-  def photos_params
-    Array(params.require(:field_series).permit(photos: [])[:photos])
-  end
+    def photos_params
+      Array(params[:field_series][:photos]).select(&:present?)
+    end
 end

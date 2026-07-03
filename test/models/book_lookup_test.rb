@@ -9,71 +9,73 @@ class BookLookupTest < ActiveSupport::TestCase
     Rails.cache.clear
   end
 
-  test "lookup_isbn returns hash with title, author, cover_url, year" do
-    result = Book.lookup_isbn(VALID_ISBN, http: fake_http(VALID_ISBN))
+  test "lookup_isbn returns hash with title, author, cover_url" do
+    stub_get_response(success_response(VALID_ISBN)) do
+      result = Book.lookup_isbn(VALID_ISBN)
 
-    assert_not_nil result
-    assert_equal "Refactoring", result[:title]
-    assert_equal "Martin Fowler", result[:author]
-    assert_includes result[:cover_url], VALID_ISBN
-    assert_equal 2018, result[:year]
+      assert_equal "Refactoring", result[:title]
+      assert_equal "Martin Fowler", result[:author]
+      assert_includes result[:cover_url], VALID_ISBN
+    end
   end
 
   test "returns nil on API failure" do
-    result = Book.lookup_isbn(UNKNOWN_ISBN, http: failing_http)
-    assert_nil result
+    stub_get_response(failure_response) do
+      assert_nil Book.lookup_isbn(UNKNOWN_ISBN)
+    end
   end
 
   test "caches results for subsequent calls" do
     call_count = 0
-    counting_http = fake_http(VALID_ISBN, on_call: -> { call_count += 1 })
+    counting = ->(_uri) { call_count += 1; success_response(VALID_ISBN) }
 
     with_memory_cache do
-      Book.lookup_isbn(VALID_ISBN, http: counting_http)
-      Book.lookup_isbn(VALID_ISBN, http: counting_http)
+      stub_get_response(counting) do
+        Book.lookup_isbn(VALID_ISBN)
+        Book.lookup_isbn(VALID_ISBN)
+      end
     end
 
     assert_equal 1, call_count
   end
 
   private
-
-  def fake_http(isbn, on_call: nil)
-    body = {
-      "ISBN:#{isbn}" => {
-        "title"        => "Refactoring",
-        "authors"      => [ { "name" => "Martin Fowler" } ],
-        "publish_date" => "2018"
-      }
-    }.to_json
-
-    resp = Net::HTTPSuccess.new("1.1", "200", "OK")
-    resp.instance_variable_set(:@body, body)
-    resp.instance_variable_set(:@read, true)
-
-    http = Object.new
-    http.define_singleton_method(:get_response) do |_uri|
-      on_call&.call
-      resp
+    def stub_get_response(response)
+      original = Net::HTTP.method(:get_response)
+      Net::HTTP.define_singleton_method(:get_response) do |uri|
+        response.respond_to?(:call) ? response.call(uri) : response
+      end
+      yield
+    ensure
+      Net::HTTP.define_singleton_method(:get_response, original)
     end
-    http
-  end
 
-  def with_memory_cache
-    original = Rails.cache
-    Rails.cache = ActiveSupport::Cache::MemoryStore.new
-    yield
-  ensure
-    Rails.cache = original
-  end
+    def success_response(isbn)
+      body = {
+        "ISBN:#{isbn}" => {
+          "title"   => "Refactoring",
+          "authors" => [ { "name" => "Martin Fowler" } ]
+        }
+      }.to_json
 
-  def failing_http
-    resp = Net::HTTPNotFound.new("1.1", "404", "Not Found")
-    resp.instance_variable_set(:@body, "{}")
-    resp.instance_variable_set(:@read, true)
+      Net::HTTPSuccess.new("1.1", "200", "OK").tap do |resp|
+        resp.instance_variable_set(:@body, body)
+        resp.instance_variable_set(:@read, true)
+      end
+    end
 
-    http = Object.new
-    http.define_singleton_method(:get_response) { |_uri| resp }
-    http
-  end
+    def failure_response
+      Net::HTTPNotFound.new("1.1", "404", "Not Found").tap do |resp|
+        resp.instance_variable_set(:@body, "{}")
+        resp.instance_variable_set(:@read, true)
+      end
+    end
+
+    def with_memory_cache
+      original = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      yield
+    ensure
+      Rails.cache = original
+    end
 end

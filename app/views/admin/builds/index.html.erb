@@ -1,36 +1,34 @@
 <% content_for :title, "Builds" %>
 
 <%= admin_toolbar(title: "Builds") do %>
-  <%= link_to "New Build", new_admin_build_path, class: btn_primary_class %>
+  <%= link_to "New Build", new_admin_build_path, class: "btn btn--primary" %>
 <% end %>
 
 <% if @builds.any? %>
-  <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-    <table class="w-full border-collapse">
-      <thead>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Kind</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @builds.each do |build| %>
         <tr>
-          <th class="<%= admin_table_th_class %>">Title</th>
-          <th class="<%= admin_table_th_class %>">Kind</th>
-          <th class="<%= admin_table_th_class %>">Status</th>
-          <th class="<%= admin_table_th_class %>"></th>
+          <td>
+            <%= link_to build.title, edit_admin_build_path(build), class: "txt-accent txt-medium" %>
+          </td>
+          <td class="txt-subtle"><%= build.kind %></td>
+          <td><%= badge(build.status) %></td>
+          <td></td>
         </tr>
-      </thead>
-      <tbody>
-        <% @builds.each do |build| %>
-          <tr class="hover:bg-stone-50 transition">
-            <td class="<%= admin_table_td_class %>">
-              <%= link_to build.title, edit_admin_build_path(build), class: "text-accent hover:text-[#D4631E] font-medium" %>
-            </td>
-            <td class="<%= admin_table_td_class %> text-stone-500"><%= build.kind %></td>
-            <td class="<%= admin_table_td_class %>"><%= badge(build.status) %></td>
-            <td class="<%= admin_table_td_class %>"></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
-  <p class="text-center py-12 text-stone-500 text-sm">
-    No builds yet. <%= link_to "Add your first one", new_admin_build_path, class: "text-accent" %>
+  <p class="empty-state">
+    No builds yet. <%= link_to "Add your first one", new_admin_build_path, class: "txt-accent" %>
   </p>
 <% end %>

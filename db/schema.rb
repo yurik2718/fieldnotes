@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_03_090000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -50,14 +50,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
   end
 
   create_table "books", force: :cascade do |t|
-    t.string "author"
+    t.string "author", null: false
     t.string "cover_url"
     t.datetime "created_at", null: false
     t.string "isbn"
     t.text "key_idea"
     t.integer "rating"
-    t.string "status"
-    t.string "title"
+    t.string "status", default: "reading", null: false
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.integer "year_read"
   end
@@ -67,12 +67,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
     t.text "description"
     t.date "finished_on"
     t.string "icon_emoji"
-    t.string "kind"
-    t.integer "position"
-    t.string "slug"
+    t.string "kind", default: "other", null: false
+    t.integer "position", null: false
+    t.string "slug", null: false
     t.date "started_on"
-    t.string "status"
-    t.string "title"
+    t.string "status", default: "active", null: false
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.string "url"
     t.index ["slug"], name: "index_builds_on_slug", unique: true
@@ -85,18 +85,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
     t.string "location_name"
     t.decimal "longitude"
     t.datetime "published_at"
-    t.string "slug"
-    t.string "status"
-    t.string "title"
+    t.string "slug", null: false
+    t.string "status", default: "draft", null: false
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_essays_on_slug", unique: true
-  end
-
-  create_table "exports", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "expires_at"
-    t.string "status"
-    t.datetime "updated_at", null: false
+    t.index ["status", "published_at"], name: "index_essays_on_status_and_published_at"
   end
 
   create_table "field_items", force: :cascade do |t|
@@ -110,26 +104,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
     t.decimal "gps_latitude", precision: 10, scale: 7
     t.decimal "gps_longitude", precision: 10, scale: 7
     t.integer "iso"
-    t.string "kind"
+    t.string "kind", default: "photo", null: false
     t.string "lens"
-    t.integer "position"
+    t.integer "position", null: false
     t.string "shutter_speed"
     t.datetime "taken_at"
     t.datetime "updated_at", null: false
     t.string "youtube_url"
+    t.index ["field_series_id", "position"], name: "index_field_items_on_field_series_id_and_position"
     t.index ["field_series_id"], name: "index_field_items_on_field_series_id"
   end
 
   create_table "field_series", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
-    t.string "kind"
+    t.string "kind", default: "photo", null: false
     t.decimal "latitude"
     t.string "location"
     t.decimal "longitude"
-    t.string "slug"
+    t.string "slug", null: false
     t.date "taken_on"
-    t.string "title"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_field_series_on_slug", unique: true
   end
@@ -145,7 +140,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
     t.datetime "created_at", null: false
     t.string "event"
     t.json "payload"
-    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_page_views_on_created_at"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -171,23 +166,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
     t.string "watermark_position", default: "bottom_right"
   end
 
-  create_table "taggings", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "tag_id", null: false
-    t.integer "taggable_id", null: false
-    t.string "taggable_type", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tag_id"], name: "index_taggings_on_tag_id"
-    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable"
-  end
-
-  create_table "tags", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "name"
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_tags_on_name", unique: true
-  end
-
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email_address", null: false
@@ -200,5 +178,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_24_100001) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "field_items", "field_series"
   add_foreign_key "sessions", "users"
-  add_foreign_key "taggings", "tags"
 end

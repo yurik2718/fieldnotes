@@ -1,15 +1,12 @@
 class ExtractExifJob < ApplicationJob
-  queue_as :default
+  def perform(field_item)
+    return unless field_item.photo.attached?
 
-  def perform(field_item_id)
-    item = FieldItem.find(field_item_id)
-    return unless item.photo.attached?
-
-    item.photo.open do |file|
+    field_item.photo.open do |file|
       data = read_exif(file.path)
       next unless data
 
-      item.update!(
+      field_item.update!(
         camera_make:   data["Make"],
         camera_model:  data["Model"],
         lens:          data["LensModel"] || data["Lens"],
@@ -22,8 +19,8 @@ class ExtractExifJob < ApplicationJob
         gps_longitude: data["GPSLongitude"]
       )
 
-      if item.position == 1 && data["GPSLatitude"] && item.field_series.latitude.blank?
-        item.field_series.update!(
+      if field_item.position == 1 && data["GPSLatitude"] && field_item.field_series.latitude.blank?
+        field_item.field_series.update!(
           latitude:  data["GPSLatitude"],
           longitude: data["GPSLongitude"]
         )
@@ -32,18 +29,14 @@ class ExtractExifJob < ApplicationJob
   end
 
   private
+    def read_exif(path)
+      JSON.parse(IO.popen([ "exiftool", "-j", "-n", path ], &:read))&.first
+    end
 
-  def read_exif(path)
-    JSON.parse(IO.popen([ "exiftool", "-j", "-n", path ], &:read))&.first
-  rescue => e
-    Rails.logger.error("ExtractExifJob EXIF read failed: #{e.message}")
-    nil
-  end
-
-  def parse_exif_date(value)
-    return unless value
-    Time.strptime(value, "%Y:%m:%d %H:%M:%S")
-  rescue ArgumentError
-    nil
-  end
+    def parse_exif_date(value)
+      return unless value
+      Time.strptime(value, "%Y:%m:%d %H:%M:%S")
+    rescue ArgumentError
+      nil
+    end
 end

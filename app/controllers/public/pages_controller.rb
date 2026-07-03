@@ -7,4 +7,7 @@ class Public::PagesController < Public::BaseController
 
   def uses
   end
+
+  def support
+  end
 end

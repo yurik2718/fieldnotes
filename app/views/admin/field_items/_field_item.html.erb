@@ -1,0 +1,28 @@
+<%# locals: (field_item:) %>
+<div id="<%= dom_id(field_item) %>" class="panel flex align-start justify-between gap">
+  <div class="flex align-start gap flex-grow min-width">
+    <% if field_item.photo.attached? %>
+      <div class="no-shrink">
+        <%= image_tag field_item.photo.variant(:thumb), alt: field_item.caption.to_s, class: "thumb" %>
+      </div>
+    <% end %>
+    <div class="flex-grow min-width stack">
+      <%= badge(field_item.kind) %>
+      <% if field_item.caption.present? %>
+        <p class="txt-small"><%= field_item.caption %></p>
+      <% end %>
+      <% if field_item.youtube_url.present? %>
+        <p class="txt-x-small txt-subtle"><%= field_item.youtube_url %></p>
+      <% end %>
+      <p class="txt-x-small txt-subtle">Position: <%= field_item.position %></p>
+      <% if field_item.camera_model.present? %>
+        <p class="txt-x-small txt-subtle"><%= "#{field_item.camera_make} #{field_item.camera_model}".strip %> · <%= field_item.aperture %> · ISO <%= field_item.iso %></p>
+      <% end %>
+    </div>
+  </div>
+  <div class="no-shrink">
+    <%= button_to "Delete", admin_field_field_item_path(field_item.field_series, field_item), method: :delete,
+          class: "btn btn--danger",
+          form: { data: { turbo_confirm: "Delete this item?" } } %>
+  </div>
+</div>

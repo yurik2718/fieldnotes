@@ -1,38 +1,38 @@
 <% content_for :title, @series.title %>
-<% content_for :main_class, "max-w-[90rem]" %>
+<% content_for :main_class, "container--wide" %>
 <% content_for :head do %>
   <%= meta_tags(title: @series.title, description: @series.description.presence || @series.title) %>
 <% end %>
 
-<nav class="mb-6">
-  <%= link_to "← Field", field_index_path, class: "text-muted hover:text-accent transition" %>
+<nav class="margin-block">
+  <%= link_to "← Field", field_index_path, class: "txt-subtle" %>
 </nav>
 
-<header class="mb-8">
-  <h1 class="text-4xl font-bold mb-3"><%= @series.title %></h1>
-  <div class="flex items-center gap-3 flex-wrap mb-3">
+<header class="margin-block-2x">
+  <h1 class="margin-block-half"><%= @series.title %></h1>
+  <div class="flex align-center gap-half flex-wrap margin-block-half">
     <% if @series.location.present? %>
-      <span class="text-muted">📍 <%= @series.location %></span>
-      <span class="text-border">·</span>
+      <span class="txt-subtle">📍 <%= @series.location %></span>
+      <span class="txt-subtle">·</span>
     <% end %>
     <% if @series.taken_on.present? %>
-      <time class="text-muted" datetime="<%= @series.taken_on.iso8601 %>">
+      <time class="txt-subtle" datetime="<%= @series.taken_on.iso8601 %>">
         <%= @series.taken_on.strftime("%B %Y") %>
       </time>
-      <span class="text-border">·</span>
+      <span class="txt-subtle">·</span>
     <% end %>
     <%= badge(@series.kind) %>
   </div>
   <% if @series.description.present? %>
-    <p class="text-muted leading-relaxed"><%= @series.description %></p>
+    <p class="txt-subtle"><%= @series.description %></p>
   <% end %>
 </header>
 
-<div class="space-y-8">
+<div class="gallery">
   <% @series.field_items.ordered.each_with_index do |item, index| %>
     <figure>
       <% if item.photo.attached? %>
-        <div class="rounded-lg overflow-hidden">
+        <div class="media-frame">
           <%= picture_tag(
             field_item_photo(item),
             alt:     item.caption.presence || @series.title,
@@ -42,10 +42,9 @@
         </div>
       <% elsif item.youtube_url.present? %>
         <% if (video_id = item.youtube_video_id) %>
-          <div class="rounded-lg overflow-hidden aspect-video">
+          <div class="media-frame media-frame--video">
             <iframe src="https://www.youtube-nocookie.com/embed/<%= video_id %>"
                     title="<%= item.caption.presence || @series.title %>"
-                    class="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen
                     loading="lazy"></iframe>
@@ -53,7 +52,7 @@
         <% end %>
       <% end %>
       <% if item.caption.present? %>
-        <figcaption class="text-muted text-sm mt-2 text-center italic"><%= item.caption %></figcaption>
+        <figcaption><%= item.caption %></figcaption>
       <% end %>
       <%= render "shared/exif", item: item %>
     </figure>

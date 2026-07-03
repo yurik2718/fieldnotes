@@ -1,28 +1,28 @@
 <% content_for :title, "Now" %>
 
 <%= admin_toolbar(title: "Now") do %>
-  <%= link_to "View on site", now_path, target: "_blank", class: btn_secondary_class %>
+  <%= link_to "View on site", now_path, target: "_blank", class: "btn" %>
 <% end %>
 
 <%= admin_card do %>
   <%= form_with model: @now_entry, url: admin_now_path, method: :patch do |f| %>
-    <div class="mb-4">
+    <div class="field">
       <%= f.rich_text_area :body %>
-      <p class="<%= admin_hint_class %>">Each update creates a new entry. Previous versions are kept as history.</p>
+      <p class="hint">Each update creates a new entry. Previous versions are kept as history.</p>
     </div>
-    <div class="mb-4">
-      <%= f.label :location, class: admin_label_class %>
-      <%= f.text_field :location, placeholder: "e.g. Bali, Indonesia", class: admin_input_class %>
+    <div class="field">
+      <%= f.label :location, class: "label" %>
+      <%= f.text_field :location, placeholder: "e.g. Bali, Indonesia", class: "input" %>
     </div>
-    <%= f.submit "Update", class: btn_primary_class %>
+    <%= f.submit "Update", class: "btn btn--primary" %>
   <% end %>
 <% end %>
 
 <% if @previous_entries.any? %>
-  <h2 class="text-lg font-semibold mb-3 text-stone-900">Previous entries</h2>
+  <h2 class="txt-large margin-block-half">Previous entries</h2>
   <% @previous_entries.each do |entry| %>
-    <div class="bg-white rounded-xl shadow-sm px-4 py-3 mb-2">
-      <p class="text-xs text-stone-500">
+    <div class="panel panel--compact">
+      <p class="txt-x-small txt-subtle">
         <%= entry.published_at.strftime("%b %d, %Y at %H:%M") %>
         <% if entry.location.present? %>
           · 📍 <%= entry.location %>

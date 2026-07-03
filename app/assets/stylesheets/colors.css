@@ -1,10 +1,5 @@
-@import "tailwindcss";
-
-@source "../../views/**/*.{rb,html,html.erb}";
-@source "../../components/**/*.rb";
-
-@theme {
-  /* Brand colors */
+:root {
+  /* Brand */
   --color-bg:           #0F0F0F;
   --color-surface:      #1A1A1A;
   --color-border:       #2E2E2E;
@@ -18,7 +13,7 @@
   --color-pre-bg:    #1E1E1E;
   --color-code-text: #E8C9A0;
 
-  /* Status colors */
+  /* Status */
   --color-green-bg:    #1A2E22;
   --color-green-text:  #6EE7A0;
   --color-blue-bg:     #1A1F2E;
@@ -29,12 +24,25 @@
   --color-amber-text:  #FBB040;
   --color-red-bg:      #2E1A1A;
   --color-red-text:    #F87171;
+}
 
-  /* Typography */
-  --font-family-sans: 'Onest', system-ui, sans-serif;
-  --font-family-mono: 'JetBrains Mono', monospace;
+/* Admin runs the same components on light tokens */
+.admin-theme {
+  --color-bg:           #F5F5F4;
+  --color-surface:      #FFFFFF;
+  --color-border:       #D6D3D1;
+  --color-ink:          #1C1917;
+  --color-muted:        #78716C;
+  --color-accent-hover: #D4631E;
 
-  /* Layout */
-  --max-width-content: 70ch;
-  --max-width-wide: 90rem;
+  --color-green-bg:    #DCFCE7;
+  --color-green-text:  #166534;
+  --color-blue-bg:     #DBEAFE;
+  --color-blue-text:   #1E40AF;
+  --color-purple-bg:   #EDE9FE;
+  --color-purple-text: #5B21B6;
+  --color-amber-bg:    #FEF3C7;
+  --color-amber-text:  #92400E;
+  --color-red-bg:      #FEE2E2;
+  --color-red-text:    #991B1B;
 }

@@ -3,29 +3,29 @@
   <%= meta_tags(title: "Now", description: "What I'm working on right now.") %>
 <% end %>
 
-<h1 class="text-3xl font-bold tracking-tight mb-8">Now</h1>
+<h1 class="margin-block-2x">Now</h1>
 
 <% if @current %>
-  <div class="lexxy-content mb-4"><%= @current.body %></div>
-  <p class="text-muted text-sm">
+  <div class="lexxy-content margin-block-half"><%= @current.body %></div>
+  <p class="txt-subtle txt-small">
     <time datetime="<%= @current.published_at.iso8601 %>">
       Updated <%= @current.published_at.strftime("%B %d, %Y") %>
     </time>
     <% if @current.location.present? %>
-      <span class="ml-2">📍 <%= @current.location %></span>
+      <span>📍 <%= @current.location %></span>
     <% end %>
   </p>
 <% end %>
 
 <% if @previous.any? %>
-  <section class="previous-entries mt-12">
-    <h2 class="text-xl font-semibold mb-4">Previous entries</h2>
+  <section class="history">
+    <h2 class="margin-block">Previous entries</h2>
     <% @previous.each do |entry| %>
-      <details class="border-t border-border py-4">
-        <summary class="text-muted cursor-pointer hover:text-ink transition">
+      <details>
+        <summary>
           <%= entry.published_at.strftime("%B %d, %Y") %>
         </summary>
-        <div class="lexxy-content mt-3"><%= entry.body %></div>
+        <div class="lexxy-content history__body"><%= entry.body %></div>
       </details>
     <% end %>
   </section>

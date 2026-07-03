@@ -9,20 +9,21 @@ module Sluggable
                      format: { with: /\A[a-z0-9-]+\z/, message: "only lowercase letters, numbers, and hyphens allowed" }
   end
 
+  def to_param = slug
+
   private
+    def generate_slug
+      return if slug.present? || title.blank?
 
-  def generate_slug
-    return if slug.present? || title.blank?
+      base = title.parameterize
+      candidate = base
+      counter = 2
 
-    base = title.parameterize
-    candidate = base
-    counter = 2
+      while self.class.exists?(slug: candidate)
+        candidate = "#{base}-#{counter}"
+        counter += 1
+      end
 
-    while self.class.exists?(slug: candidate)
-      candidate = "#{base}-#{counter}"
-      counter += 1
+      self.slug = candidate
     end
-
-    self.slug = candidate
-  end
 end

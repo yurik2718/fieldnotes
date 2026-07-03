@@ -12,7 +12,7 @@ class ExtractExifJobTest < ActiveSupport::TestCase
 
     job = ExtractExifJob.new
     job.define_singleton_method(:read_exif) { |_path| exif_data }
-    job.perform(item.id)
+    job.perform(item)
 
     item.reload
     assert_equal "Sony", item.camera_make
@@ -24,7 +24,7 @@ class ExtractExifJobTest < ActiveSupport::TestCase
 
   test "skips if no photo attached" do
     item = field_items(:video_one)
-    assert_nothing_raised { ExtractExifJob.perform_now(item.id) }
+    assert_nothing_raised { ExtractExifJob.perform_now(item) }
   end
 
   test "auto-fills series coordinates from first photo" do
@@ -37,7 +37,7 @@ class ExtractExifJobTest < ActiveSupport::TestCase
 
     job = ExtractExifJob.new
     job.define_singleton_method(:read_exif) { |_path| exif_data }
-    job.perform(item.id)
+    job.perform(item)
 
     series.reload
     assert_in_delta 64.1466, series.latitude.to_f, 0.001

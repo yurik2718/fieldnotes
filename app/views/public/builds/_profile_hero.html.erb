@@ -1,16 +1,16 @@
 <%# locals: (profile:) %>
-<section class="flex items-center gap-6 mb-12 pb-8 border-b border-border">
-  <div class="flex-shrink-0">
+<section class="profile-hero">
+  <div class="no-shrink">
     <% if profile.avatar.attached? %>
-      <%= image_tag profile.avatar, alt: profile.name, class: "w-24 h-24 rounded-full object-cover" %>
+      <%= image_tag profile.avatar, alt: profile.name, class: "profile-hero__avatar" %>
     <% else %>
-      <img src="/avatar.jpg" alt="<%= profile.name %>" class="w-24 h-24 rounded-full object-cover">
+      <img src="/avatar.jpg" alt="<%= profile.name %>" class="profile-hero__avatar">
     <% end %>
   </div>
   <div>
-    <h2 class="text-2xl font-bold mb-1"><%= profile.name %></h2>
+    <h2><%= profile.name %></h2>
     <% if profile.bio.present? %>
-      <div class="text-muted lexxy-content"><%= profile.bio %></div>
+      <div class="txt-subtle lexxy-content"><%= profile.bio %></div>
     <% end %>
   </div>
 </section>

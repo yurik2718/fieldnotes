@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get "/contact", to: "pages#contact", as: :contact
     get "/about",   to: "pages#about",   as: :about
     get "/uses",    to: "pages#uses",     as: :uses
+    get "/support", to: "pages#support",  as: :support
   end
 
   get "/sitemap.xml", to: "sitemap#index", defaults: { format: :xml }, as: :sitemap

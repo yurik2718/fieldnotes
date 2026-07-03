@@ -1,10 +1,8 @@
 class Public::BooksController < Public::BaseController
-  rate_limit to: 60, within: 1.minute
-
   def index
     @reading = Book.reading.by_year
     @books   = Book.completed.by_year
-    fresh_when etag: Book.maximum(:updated_at)
+    fresh_when etag: [ Book.maximum(:updated_at), Book.count ]
   end
 
   def show

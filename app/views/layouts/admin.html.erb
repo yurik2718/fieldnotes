@@ -1,31 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title).present? ? "#{content_for(:title)} — Admin" : "Admin — Fieldnotes" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "lexxy-content", "lexxy-overrides", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy-content", *all_stylesheets, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="bg-stone-100 font-sans text-stone-900 min-h-screen">
-    <nav class="bg-stone-900 text-white px-6 h-12 flex items-center gap-1 sticky top-0 z-10">
-      <span class="text-white font-semibold text-[0.9375rem] mr-4 pr-4 border-r border-stone-700">Fieldnotes</span>
-      <%= link_to "Essays",   admin_essays_path,       class: admin_nav_class("essays"),   aria: { current: (controller_name == "essays"  ? "page" : nil) } %>
-      <%= link_to "Builds",   admin_builds_path,       class: admin_nav_class("builds"),   aria: { current: (controller_name == "builds"  ? "page" : nil) } %>
-      <%= link_to "Books",    admin_books_path,        class: admin_nav_class("books"),    aria: { current: (controller_name == "books"   ? "page" : nil) } %>
-      <%= link_to "Field",    admin_field_index_path,  class: admin_nav_class("field"),    aria: { current: (controller_name.in?(%w[field field_items]) ? "page" : nil) } %>
-      <span class="flex-1"></span>
-      <%= link_to "⚡ Quick", new_admin_quick_path,
-          class: "sm:hidden bg-accent text-white px-3 py-1.5 rounded-md text-sm font-medium no-underline" %>
-      <%= link_to "Now",      edit_admin_now_path,      class: admin_nav_class("nows"),     aria: { current: (controller_name == "nows"     ? "page" : nil) } %>
-      <%= link_to "Profile",  edit_admin_profile_path, class: admin_nav_class("profiles"), aria: { current: (controller_name == "profiles" ? "page" : nil) } %>
-      <%= link_to "Settings", edit_admin_settings_path, class: admin_nav_class("settings"), aria: { current: (controller_name == "settings" ? "page" : nil) } %>
-      <%= button_to "Sign out", session_path, method: :delete,
-            class: "bg-transparent border border-stone-700 text-stone-400 px-3 py-1 rounded-md text-[0.8125rem] cursor-pointer hover:border-stone-500 hover:text-white transition ml-2" %>
+  <body class="admin-theme">
+    <nav class="admin-nav">
+      <span class="admin-nav__brand">Fieldnotes</span>
+      <%= admin_nav_link "Essays", admin_essays_path,      controller: "essays" %>
+      <%= admin_nav_link "Builds", admin_builds_path,      controller: "builds" %>
+      <%= admin_nav_link "Books",  admin_books_path,       controller: "books" %>
+      <%= admin_nav_link "Field",  admin_field_index_path, controller: %w[ field field_items ] %>
+      <span class="flex-grow"></span>
+      <%= link_to "⚡ Quick", new_admin_quick_path, class: "btn btn--primary" %>
+      <%= admin_nav_link "Now",      edit_admin_now_path,      controller: "nows" %>
+      <%= admin_nav_link "Profile",  edit_admin_profile_path,  controller: "profiles" %>
+      <%= admin_nav_link "Settings", edit_admin_settings_path, controller: "settings" %>
+      <%= button_to "Sign out", session_path, method: :delete, class: "admin-nav__signout" %>
     </nav>
-    <main class="max-w-[960px] mx-auto px-6 py-8 pb-16">
+    <main>
       <%= render "shared/flash" %>
       <%= yield %>
     </main>

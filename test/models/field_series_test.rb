@@ -35,8 +35,36 @@ class FieldSeriesTest < ActiveSupport::TestCase
     assert_equal "mountains-2", second.slug
   end
 
-  test "has cover attachment" do
+  test "cover_photo is nil without cover or item photos" do
+    assert_nil field_series(:iceland).cover_photo
+  end
+
+  test "cover_photo falls back to the first item photo" do
     series = field_series(:iceland)
-    assert_respond_to series, :cover
+    item = series.field_items.ordered.first
+    item.photo.attach(io: File.open(file_fixture("test_image.jpg")), filename: "a.jpg", content_type: "image/jpeg")
+
+    assert_equal item.photo.blob, series.reload.cover_photo.blob
+  end
+
+  test "cover_photo prefers the series cover" do
+    series = field_series(:iceland)
+    series.cover.attach(io: File.open(file_fixture("test_image.jpg")), filename: "c.jpg", content_type: "image/jpeg")
+
+    assert_equal series.cover.blob, series.cover_photo.blob
+  end
+
+  test "append_photos creates positioned photo items" do
+    series = field_series(:norway)
+    photos = 2.times.map do
+      { io: File.open(file_fixture("test_image.jpg")), filename: "a.jpg", content_type: "image/jpeg" }
+    end
+
+    assert_difference("FieldItem.count", 2) do
+      series.append_photos(photos)
+    end
+
+    assert_equal [ 2, 3 ], series.field_items.ordered.last(2).map(&:position)
+    assert series.field_items.ordered.last(2).all?(&:photo?)
   end
 end

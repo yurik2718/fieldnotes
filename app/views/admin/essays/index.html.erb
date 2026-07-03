@@ -1,47 +1,44 @@
 <% content_for :title, "Essays" %>
 
 <%= admin_toolbar(title: "Essays") do %>
-  <%= link_to "New Essay", new_admin_essay_path, class: btn_primary_class %>
+  <%= link_to "New Essay", new_admin_essay_path, class: "btn btn--primary" %>
 <% end %>
 
 <% if @essays.any? %>
-  <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-    <table class="w-full border-collapse">
-      <thead>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Published</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @essays.each do |essay| %>
         <tr>
-          <th class="<%= admin_table_th_class %> w-[52px]"></th>
-          <th class="<%= admin_table_th_class %>">Title</th>
-          <th class="<%= admin_table_th_class %>">Status</th>
-          <th class="<%= admin_table_th_class %>">Published</th>
-          <th class="<%= admin_table_th_class %>"></th>
+          <td>
+            <% if essay.cover.attached? %>
+              <%= image_tag essay.cover, class: "thumb thumb--square" %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to essay.title, edit_admin_essay_path(essay), class: "txt-accent txt-medium" %>
+          </td>
+          <td><%= badge(essay.status) %></td>
+          <td><%= essay.published_at&.strftime("%b %d, %Y") %></td>
+          <td>
+            <% if essay.published? %>
+              <%= link_to "View", essay_path(essay.slug), target: "_blank", class: "txt-small txt-subtle" %>
+            <% end %>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <% @essays.each do |essay| %>
-          <tr class="hover:bg-stone-50 transition">
-            <td class="<%= admin_table_td_class %>">
-              <% if essay.cover.attached? %>
-                <%= image_tag essay.cover, class: "w-10 h-10 object-cover rounded block" %>
-              <% end %>
-            </td>
-            <td class="<%= admin_table_td_class %>">
-              <%= link_to essay.title, edit_admin_essay_path(essay), class: "text-accent hover:text-[#D4631E] font-medium" %>
-            </td>
-            <td class="<%= admin_table_td_class %>"><%= badge(essay.status) %></td>
-            <td class="<%= admin_table_td_class %>"><%= essay.published_at&.strftime("%b %d, %Y") %></td>
-            <td class="<%= admin_table_td_class %> text-right">
-              <% if essay.published? %>
-                <%= link_to "View", essay_path(essay.slug), target: "_blank",
-                      class: "text-sm text-stone-600 hover:text-stone-900 px-2 py-1 rounded hover:bg-stone-100 transition" %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
-  <p class="text-center py-12 text-stone-500 text-sm">
-    No essays yet. <%= link_to "Write your first one", new_admin_essay_path, class: "text-accent" %>
+  <p class="empty-state">
+    No essays yet. <%= link_to "Write your first one", new_admin_essay_path, class: "txt-accent" %>
   </p>
 <% end %>

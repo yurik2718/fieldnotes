@@ -3,26 +3,26 @@
 
 <%= form_with model: [:admin, essay] do |f| %>
   <%= admin_card do %>
-    <div class="mb-4">
-      <%= f.label :title, class: admin_label_class %>
-      <%= f.text_field :title, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :title, class: "label" %>
+      <%= f.text_field :title, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :excerpt, class: admin_label_class %>
-      <%= f.text_area :excerpt, rows: 3, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :excerpt, class: "label" %>
+      <%= f.text_area :excerpt, rows: 3, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :status, class: admin_label_class %>
-      <%= f.select :status, Essay::STATUSES, {}, class: admin_input_class %>
+    <div class="field">
+      <%= f.label :status, class: "label" %>
+      <%= f.select :status, Essay.statuses.keys, {}, class: "input" %>
     </div>
-    <div class="mb-4">
-      <%= f.label :published_at, class: admin_label_class %>
-      <%= f.datetime_local_field :published_at, class: admin_input_class %>
-      <p class="<%= admin_hint_class %>">Leave blank — will be set automatically when published.</p>
+    <div class="field">
+      <%= f.label :published_at, class: "label" %>
+      <%= f.datetime_local_field :published_at, class: "input" %>
+      <p class="hint">Leave blank — will be set automatically when published.</p>
     </div>
-    <div class="mb-4 last:mb-0">
-      <%= f.label :cover, class: admin_label_class %>
-      <%= f.file_field :cover, class: "text-sm text-stone-600 cursor-pointer" %>
+    <div class="field">
+      <%= f.label :cover, class: "label" %>
+      <%= f.file_field :cover, accept: "image/*", class: "input--file" %>
     </div>
   <% end %>
 
@@ -30,12 +30,12 @@
     <%= f.rich_text_area :content %>
   <% end %>
 
-  <div class="flex items-center gap-3">
+  <div class="flex align-center gap-half">
     <% if essay.published? %>
-      <%= f.submit "Save", class: btn_primary_class %>
+      <%= f.submit "Save", class: "btn btn--primary" %>
     <% else %>
-      <%= f.submit "Save Draft", class: btn_secondary_class %>
-      <%= f.submit "Publish", name: "publish", class: btn_primary_class %>
+      <%= f.submit "Save Draft", class: "btn" %>
+      <%= f.submit "Publish", name: "publish", class: "btn btn--primary" %>
     <% end %>
   </div>
 <% end %>

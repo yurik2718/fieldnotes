@@ -1,0 +1,2 @@
+<%= turbo_stream.append :field_items, partial: "admin/field_items/field_item", locals: { field_item: @item } %>
+<%= turbo_stream.replace :new_field_item, partial: "admin/field_items/form", locals: { series: @series } %>

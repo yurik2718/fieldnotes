@@ -1,41 +1,38 @@
 <% content_for :title, "Field Series" %>
 
 <%= admin_toolbar(title: "Field Series") do %>
-  <%= link_to "New Series", new_admin_field_path, class: btn_primary_class %>
+  <%= link_to "New Series", new_admin_field_path, class: "btn btn--primary" %>
 <% end %>
 
 <% if @series.any? %>
-  <div class="bg-white rounded-xl overflow-hidden shadow-sm">
-    <table class="w-full border-collapse">
-      <thead>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Kind</th>
+        <th>Location</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @series.each do |s| %>
         <tr>
-          <th class="<%= admin_table_th_class %>">Title</th>
-          <th class="<%= admin_table_th_class %>">Kind</th>
-          <th class="<%= admin_table_th_class %>">Location</th>
-          <th class="<%= admin_table_th_class %>">Date</th>
-          <th class="<%= admin_table_th_class %>"></th>
+          <td>
+            <%= link_to s.title, admin_field_path(s), class: "txt-accent txt-medium" %>
+          </td>
+          <td class="txt-subtle"><%= s.kind %></td>
+          <td class="txt-subtle"><%= s.location %></td>
+          <td class="txt-subtle"><%= s.taken_on&.strftime("%b %d, %Y") %></td>
+          <td>
+            <%= link_to "Edit", edit_admin_field_path(s), class: "txt-small txt-subtle" %>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <% @series.each do |s| %>
-          <tr class="hover:bg-stone-50 transition">
-            <td class="<%= admin_table_td_class %>">
-              <%= link_to s.title, admin_field_path(s), class: "text-accent hover:text-[#D4631E] font-medium" %>
-            </td>
-            <td class="<%= admin_table_td_class %> text-stone-500"><%= s.kind %></td>
-            <td class="<%= admin_table_td_class %> text-stone-500"><%= s.location %></td>
-            <td class="<%= admin_table_td_class %> text-stone-500"><%= s.taken_on&.strftime("%b %d, %Y") %></td>
-            <td class="<%= admin_table_td_class %> text-right">
-              <%= link_to "Edit", edit_admin_field_path(s),
-                    class: "text-sm text-stone-600 hover:text-stone-900 px-2 py-1 rounded hover:bg-stone-100 transition" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 <% else %>
-  <p class="text-center py-12 text-stone-500 text-sm">
-    No field series yet. <%= link_to "Create your first one", new_admin_field_path, class: "text-accent" %>
+  <p class="empty-state">
+    No field series yet. <%= link_to "Create your first one", new_admin_field_path, class: "txt-accent" %>
   </p>
 <% end %>
