@@ -1,7 +1,0 @@
-one:
-  tag: ruby
-  taggable: published_new (Essay)
-
-two:
-  tag: rails
-  taggable: published_new (Essay)
